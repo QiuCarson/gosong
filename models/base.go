@@ -19,7 +19,7 @@ func init() {
 	dbName := Cfg.String("db_name")
 	dbLink := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8", dbUser, dbPass, dbHost, dbPort, dbName)
 
-	beego.Info(dbLink)
+	//beego.Info(dbLink)
 	//orm.RegisterModel(new(Posts))
 	orm.RegisterModelWithPrefix("so_", new(PostsInfo))
 	orm.RegisterDriver("mysql", orm.DRMySQL)
