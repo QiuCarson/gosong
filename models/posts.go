@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-type Posts struct {
+type PostsInfo struct {
 	ID                  int
 	PostAuthor          int
 	PostDate            time.Time `orm:"type(datetime)"`
@@ -33,16 +33,16 @@ type Posts struct {
 }
 
 func init() {
-	orm.RegisterModel(new(Posts))
+	//orm.RegisterModel(new(PostsInfo))
 }
 
-func (m *Posts) Query() orm.QuerySeter {
+func (m *PostsInfo) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(m)
 }
 
-func (m *Posts) GetList() {
-	var info Posts
-	list := make([]*Posts, 0)
-	info.Query().OrderBy("-views").Limit(5, 0).All(&list, "photo", "Id", "Title", "Name", "Addtime", "Hasepisode", "Episode")
+func (m *PostsInfo) GetList() {
+	var info PostsInfo
+	list := make([]*PostsInfo, 0)
+	info.Query().OrderBy("-views").Limit(5, 0).All(&list, "ID", "post_date", "post_title", "post_content")
 
 }

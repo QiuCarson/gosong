@@ -1,5 +1,7 @@
 package controllers
 
+import "phpsong/models"
+
 type IndexHandle struct {
 	baseController
 }
@@ -10,7 +12,8 @@ func (this *IndexHandle) Start() {
 
 func (this *IndexHandle) Index() {
 	var (
-		info models.PostInfo
+		info models.PostsInfo
 	)
+	info.GetList()
 	this.TplName = "index.html"
 }
