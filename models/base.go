@@ -21,10 +21,10 @@ func init() {
 
 	//beego.Info(dbLink)
 	//orm.RegisterModel(new(Posts))
-	orm.RegisterModelWithPrefix("so_", new(PostsInfo))
+	orm.RegisterModelWithPrefix("so_", new(PostsInfo), new(TermsInfo), new(TermRelationshipsInfo), new(TermTaxonomy), new(Postmeta))
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	orm.RegisterDataBase("default", "mysql", dbLink)
-
+	beego.SetLevel(beego.LevelError)
 	RunMode = Cfg.String("runmode")
 	if RunMode == "dev" {
 		orm.Debug = true

@@ -122,7 +122,7 @@ $(window).scroll(function() {
 	}
 });
 (function() {
-	var oMenu = document.getElementById("rightClickMenu");
+	/*var oMenu = document.getElementById("rightClickMenu");
 	var aLi = oMenu.getElementsByTagName("li");
 	for (i = 0; i < aLi.length; i++) {
 		aLi[i].onmouseover = function() {
@@ -131,7 +131,7 @@ $(window).scroll(function() {
 		aLi[i].onmouseout = function() {
 			$(this).removeClass('rightClickMenuActive');
 		}
-	}
+	}*/
 	document.oncontextmenu = function(event) {
 		$(oMenu).fadeOut(0);
 		var event = event || window.event;
