@@ -27,3 +27,18 @@ func GetPostViews(post_id int) *Postmeta {
 	info.Query().Filter("PostId", post_id).Filter("MetaKey", "views").One(view, "Id", "PostId", "MetaKey", "MetaValue")
 	return view
 }
+
+type Menu struct {
+	Name       string
+	Slug       string
+	Post_title string
+}
+
+func (t *Postmeta) GetPostMenu() []*Menu {
+	//var info Menu
+	var list []*Menu
+	sql := "select t.name,t.slug,p.post_title  from so_postmeta pm left join so_terms t on t.term_id=pm.meta_value left join so_posts p on pm.post_id=p.ID where pm.meta_key='_menu_item_object_id' order by menu_order asc"
+	//sql = "select * from so_posts where id=?"
+	orm.NewOrm().Raw(sql).QueryRows(&list)
+	return list
+}

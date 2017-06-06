@@ -19,6 +19,7 @@ func (this *IndexHandle) Index() {
 	var (
 		page     int64
 		offset   int64
+		pager    string
 		info     models.PostsInfo
 		pagesize int64 = 10
 		list     []*models.PostsInfo
@@ -37,9 +38,18 @@ func (this *IndexHandle) Index() {
 	//query := info.Query().Filter("post_type", "post").Filter("post_status", "publish")
 	count, _ := query.Count()
 	if count > 0 {
-		query.OrderBy("-post_date").Limit(pagesize, offset).All(&list)
+		num, _ := query.OrderBy("-post_date").Limit(pagesize, offset).All(&list)
+		if num < 1 {
+			this.Abort("404")
+			return
+		}
 	}
 	this.Data["list"] = list
+
+	//推荐文章
+
+	pager = this.PageList(pagesize, page, count, false, "")
+	this.Data["pager"] = pager
 	//fmt.Println(list)
 	this.TplName = "index.html"
 }

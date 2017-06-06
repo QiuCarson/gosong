@@ -1,7 +1,10 @@
 package models
 
 import (
+	"regexp"
 	"time"
+
+	"phpsong/phpserialize"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -42,6 +45,75 @@ func (m *PostsInfo) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(m)
 }
 
+type Img struct {
+	Meta_value string
+}
+type msg interface{}
+
+func GetPostImgByPostId(post_id int, PostContent string) string {
+	var imgs Img
+	sql := "SELECT pt.meta_value FROM `so_posts` p Inner join `so_postmeta` pt  on p.ID=pt.post_id WHERE pt.meta_key='_wp_attachment_metadata' and p.post_type='attachment' and p.post_parent=? limit 1"
+	//sql = "select * from so_posts where id=?"
+	err := orm.NewOrm().Raw(sql, post_id).QueryRow(&imgs)
+	flag_bool := true
+	if err == nil && false {
+
+		var decodeRes interface{}
+		var ok error
+		decodeRes, ok = phpserialize.Decode(imgs.Meta_value)
+
+		if ok == nil {
+
+			decodeData, _ := decodeRes.(map[interface{}]interface{})
+
+			file := decodeData["file"]
+			post_thumbnail := decodeData["sizes"].(map[interface{}]interface{})
+			post_thumbnail1 := post_thumbnail["post-thumbnail"].(map[interface{}]interface{})
+
+			file_string := post_thumbnail1["file"].(string)
+			if file_string != "" {
+				thumbnail := string([]rune(file.(string))[:8]) + file_string
+
+				flag_bool = false
+				return thumbnail
+			}
+		}
+	}
+	if flag_bool {
+
+		var digitsRegexp = regexp.MustCompile(`<img.*?(?: |\\t|\\r|\\n)?src=[\'"]?(.+?)[\'"]?(?:(?: |\\t|\\r|\\n)+.*?)?>`)
+		img_s := digitsRegexp.FindStringSubmatch(PostContent)
+		if len(img_s) == 2 {
+			return img_s[1]
+		}
+	}
+
+	return "/"
+
+	/*
+		post_thumbnail, _ := decodeData["sizes"].(map[interface{}]interface{})
+		post_thumbnail1, _ := post_thumbnail.(map[string]interface{})*/
+	/*thumbnail, ok := post_thumbnail1["file"]
+	if !ok {
+		thumbnail = file
+	} else {
+		//thumbnail = string([]rune(file)[:8]) + thumbnail
+	}
+	fmt.Println(thumbnail, file)*/
+	//存在
+
+	//fmt.Println(reflect.TypeOf(rs))
+	/*var rs interface{}
+	rss := make(map[string]string)
+	rss["ddd"] = "ddd"
+	rs = &rss
+	testdd(rs)*/
+	//fmt.Println(rs.ddd)
+	//fmt.Println(imgs.Meta_value)
+
+}
+
+/*
 func (m *PostsInfo) GetList(pagesize int64) []*PostsInfo {
 	var info PostsInfo
 	list := make([]*PostsInfo, 0)
@@ -49,7 +121,7 @@ func (m *PostsInfo) GetList(pagesize int64) []*PostsInfo {
 	return list
 }
 
-/*
+
 //html代码过滤
 func Strip_tags(src string) string {
 	//将HTML标签全转换成小写
