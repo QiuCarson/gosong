@@ -42,7 +42,7 @@ type Menu struct {
 func (t *Postmeta) GetPostMenu() []*Menu {
 	//var info Menu
 	var list []*Menu
-	sql := "select distinct(t.slug),t.name,p.post_title,p.post_parent,t.term_id  from so_postmeta pm left join so_terms t on t.term_id=pm.meta_value left join so_posts p on pm.post_id=p.ID where pm.meta_key='_menu_item_object_id' order by menu_order asc"
+	sql := "select t.slug,t.name,p.post_title,p.post_parent,t.term_id,p.menu_order from so_postmeta pm left join so_terms t on t.term_id=pm.meta_value left join so_posts p on pm.post_id=p.ID where pm.meta_key='_menu_item_object_id' order by p.menu_order asc"
 	//sql = "select * from so_posts where id=?"
 	orm.NewOrm().Raw(sql).QueryRows(&list)
 	return list
@@ -54,6 +54,7 @@ func GetPostMenu() []*Menu {
 	sql := "select t.name,t.slug,p.post_title,p.post_parent,t.term_id  from so_postmeta pm left join so_terms t on t.term_id=pm.meta_value left join so_posts p on pm.post_id=p.ID where pm.meta_key='_menu_item_object_id' order by p.post_parent asc, menu_order asc"
 	//sql = "select * from so_posts where id=?"
 	orm.NewOrm().Raw(sql).QueryRows(&list)
+
 	return list
 }
 
@@ -115,6 +116,7 @@ func (t *Postmeta) GetMenu(currentUrl string) []Menu1 {
 			}
 		}
 	}
+
 	return menu1
 
 }

@@ -3,7 +3,7 @@
 	{{$PostImg := GetPostImgByPostId .Id  .PostContent}}
   <article class="excerpt excerpt-1" style="">
   <a class="focus" href="/{{.Id}}.html" title="{{.PostTitle}}" target="_blank" ><img class="thumb" data-original="{{$PostImg}}" src="{{$PostImg}}" alt="{{.PostTitle}}"  style="display: inline;"></a>
-		<header><a class="cat" href="/{{.Id}}.html" title="{{$CategoryName}}" >{{$CategoryName}}<i></i></a>
+		<header><a class="cat" href="{{$CategoryName.Url}}" title="{{$CategoryName.Name}}" >{{$CategoryName.Name}}<i></i></a>
 			<h2><a href="#" title="{{.PostTitle}}" target="_blank" >{{.PostTitle}}</a>
 			</h2>
 		</header>

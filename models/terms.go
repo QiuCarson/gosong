@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/astaxie/beego/orm"
 )
 
@@ -18,28 +20,42 @@ func (t *TermsInfo) TableName() string {
 func (m *TermsInfo) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(m)
 }
-func GetCategoryNameByPostid(post_id int) string {
+
+type CategorysPost struct {
+	Url  string
+	Name string
+}
+
+func GetCategoryNameByPostid(post_id int) CategorysPost {
 	//menu := Postmeta.GetMenu()
+	var p Postmeta
+	menu := p.GetMenu("ddd")
 	info := GetCategoryTagAll(post_id)
 	//var url string
+	var CategoryPost CategorysPost
+
 	for _, v := range info {
 		if info != nil && v.Taxonomy == "category" {
-			/*for _, va := range menu {
+			fmt.Println(menu)
+			for _, va := range menu {
 				if va.Term_id == v.Term_id {
-					url = va.Url
+					CategoryPost.Url = va.Url
 					break
 				}
 				for _, vb := range va.Sub_menu {
+
 					if vb.Term_id == v.Term_id {
-						url = vb.Url
+						CategoryPost.Url = vb.Url
 						break
 					}
 				}
-			}*/
-			return v.Name
+			}
+			CategoryPost.Name = v.Name
+
+			return CategoryPost
 		}
 	}
-	return ""
+	return CategoryPost
 }
 
 type CategoryPost struct {
