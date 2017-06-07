@@ -53,3 +53,41 @@ func (this *IndexHandle) Index() {
 	//fmt.Println(list)
 	this.TplName = "index.html"
 }
+
+func (this *IndexHandle) Category() {
+
+	var (
+		page         int64
+		offset       int64
+		count        int64
+		pager        string
+		CategoryName string
+		info         models.PostsInfo
+		pagesize     int64 = 10
+		list         []*models.PostsInfo
+	)
+	categorystr := this.Ctx.Input.Param(":category")
+
+	pagestr := this.Ctx.Input.Param(":page")
+
+	page, _ = strconv.ParseInt(pagestr, 10, 64)
+	if page < 1 {
+		page = 1
+	}
+	offset = (page - 1) * pagesize
+
+	CategoryName, count, list = info.GetCategoryPosts(categorystr, offset, pagesize)
+	if len(list) < 1 {
+		this.Abort("404")
+		return
+	}
+
+	this.Data["list"] = list
+	this.Data["categoryName"] = CategoryName
+
+	//推荐文章
+
+	pager = this.PageList(pagesize, page, count, false, categorystr)
+	this.Data["pager"] = pager
+	this.TplName = "list.html"
+}

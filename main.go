@@ -1,6 +1,7 @@
 package main
 
 import (
+	"phpsong/controllers"
 	"phpsong/models"
 	_ "phpsong/routers"
 
@@ -21,6 +22,8 @@ func main() {
 	//models.GetPostImgByPostId(2775)
 	//models.GetPostImgByPostId(1)
 	//dmodels.GetPostImgByPostId(2751)
+	//models.GetMenu()
+	beego.ErrorController(&controllers.ErrorController{})
 	beego.SetStaticPath("/static", "static")
 	beego.Run()
 }

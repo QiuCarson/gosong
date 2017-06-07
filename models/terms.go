@@ -19,9 +19,23 @@ func (m *TermsInfo) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(m)
 }
 func GetCategoryNameByPostid(post_id int) string {
+	//menu := Postmeta.GetMenu()
 	info := GetCategoryTagAll(post_id)
+	//var url string
 	for _, v := range info {
 		if info != nil && v.Taxonomy == "category" {
+			/*for _, va := range menu {
+				if va.Term_id == v.Term_id {
+					url = va.Url
+					break
+				}
+				for _, vb := range va.Sub_menu {
+					if vb.Term_id == v.Term_id {
+						url = vb.Url
+						break
+					}
+				}
+			}*/
 			return v.Name
 		}
 	}
@@ -32,11 +46,12 @@ type CategoryPost struct {
 	Object_id uint64
 	Name      string
 	Taxonomy  string
+	Term_id   string
 }
 
 func GetCategoryTagAll(post_id int) []*CategoryPost {
 	CategoryPosts := make([]*CategoryPost, 0)
-	sql := "SELECT  tr.object_id,t.name,tt.taxonomy FROM so_terms AS t INNER JOIN so_term_taxonomy AS tt ON tt.term_id = t.term_id INNER JOIN so_term_relationships AS tr ON tr.term_taxonomy_id = tt.term_taxonomy_id  WHERE tt.taxonomy IN ('category', 'post_tag', 'post_format') AND tr.object_id =? ORDER BY t.name ASC"
+	sql := "SELECT  tr.object_id,t.name,tt.taxonomy,tt.term_id FROM so_terms AS t INNER JOIN so_term_taxonomy AS tt ON tt.term_id = t.term_id INNER JOIN so_term_relationships AS tr ON tr.term_taxonomy_id = tt.term_taxonomy_id  WHERE tt.taxonomy IN ('category', 'post_tag', 'post_format') AND tr.object_id =? ORDER BY t.name ASC"
 	orm.NewOrm().Raw(sql, post_id).QueryRows(&CategoryPosts)
 	//fmt.Println("CategoryPost", CategoryPosts)
 	return CategoryPosts

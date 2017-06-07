@@ -13,7 +13,12 @@ type baseController struct {
 
 func (this *baseController) Prepare() {
 	var info models.Postmeta
-	this.Data["subnav"] = info.GetPostMenu()
+	//this.Data["subnav"] = info.GetPostMenu()
+	url := this.Ctx.Request.RequestURI
+	this.Data["subnav"] = info.GetMenu(url)
+
+	//path := this.Ctx.Request.URL.String()
+	//this.Data["currentUrl"] = this.Ctx.Request.RequestURI
 
 }
 

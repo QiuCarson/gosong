@@ -2,6 +2,7 @@ package models
 
 import (
 	"regexp"
+	"strings"
 	"time"
 
 	"phpsong/phpserialize"
@@ -52,7 +53,7 @@ type msg interface{}
 
 func GetPostImgByPostId(post_id int, PostContent string) string {
 	var imgs Img
-	sql := "SELECT pt.meta_value FROM `so_posts` p Inner join `so_postmeta` pt  on p.ID=pt.post_id WHERE pt.meta_key='_wp_attachment_metadata' and p.post_type='attachment' and p.post_parent=? limit 1"
+	sql := "SELECT pt.meta_value FROM `so_posts` p Inner join `so_postmeta` pt  on p.ID=pt.post_id WHERE pt.meta_key='_so_attachment_metadata' and p.post_type='attachment' and p.post_parent=? limit 1"
 	//sql = "select * from so_posts where id=?"
 	err := orm.NewOrm().Raw(sql, post_id).QueryRow(&imgs)
 	flag_bool := true
@@ -90,27 +91,52 @@ func GetPostImgByPostId(post_id int, PostContent string) string {
 
 	return "/"
 
-	/*
-		post_thumbnail, _ := decodeData["sizes"].(map[interface{}]interface{})
-		post_thumbnail1, _ := post_thumbnail.(map[string]interface{})*/
-	/*thumbnail, ok := post_thumbnail1["file"]
-	if !ok {
-		thumbnail = file
-	} else {
-		//thumbnail = string([]rune(file)[:8]) + thumbnail
+}
+
+func (m *PostsInfo) GetCategoryIds(url string) (string, []string) {
+	var info Postmeta
+	var menus []Menu1
+	var CategoryIds []string
+	var CategoryName string
+
+	menus = info.GetMenu(url)
+	for _, v := range menus {
+		if strings.Contains(v.Url, url) {
+			CategoryIds = append(CategoryIds, v.Term_id)
+
+		}
+
+		if v.Url == "/"+url {
+			CategoryName = v.Name
+		}
+		for _, k := range v.Sub_menu {
+			if strings.Contains(k.Url, url) {
+				CategoryIds = append(CategoryIds, k.Term_id)
+			}
+			if k.Url == "/"+url {
+				CategoryName = k.Name
+			}
+		}
 	}
-	fmt.Println(thumbnail, file)*/
-	//存在
+	return CategoryName, CategoryIds
+}
 
-	//fmt.Println(reflect.TypeOf(rs))
-	/*var rs interface{}
-	rss := make(map[string]string)
-	rss["ddd"] = "ddd"
-	rs = &rss
-	testdd(rs)*/
-	//fmt.Println(rs.ddd)
-	//fmt.Println(imgs.Meta_value)
+type Countmun struct {
+	CountID string
+}
 
+func (m *PostsInfo) GetCategoryPosts(url string, offset, pagesize int64) (string, int64, []*PostsInfo) {
+	CategoryName, CategoryIds := m.GetCategoryIds(url)
+	CategoryId := strings.Join(CategoryIds, ",")
+
+	var list []*PostsInfo
+	sql := "SELECT p.* FROM so_posts p INNER JOIN so_term_relationships tr ON (p.ID = tr.object_id) WHERE 1=1  AND (tr.term_taxonomy_id IN (" + CategoryId + ")) AND p.post_type = 'post' AND (p.post_status = 'publish' OR p.post_status = 'private') GROUP BY p.ID ORDER BY p.post_date DESC LIMIT ?, ? "
+	orm.NewOrm().Raw(sql, offset, pagesize).QueryRows(&list)
+	var count []Countmun
+	sql1 := "SELECT count(*) CountID FROM so_posts p INNER JOIN so_term_relationships tr ON (p.ID = tr.object_id) WHERE 1=1  AND (tr.term_taxonomy_id IN (" + CategoryId + ")) AND p.post_type = 'post' AND (p.post_status = 'publish' OR p.post_status = 'private') GROUP BY p.ID"
+	orm.NewOrm().Raw(sql1).QueryRows(&count)
+
+	return CategoryName, int64(len(count)), list
 }
 
 /*

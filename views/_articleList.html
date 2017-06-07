@@ -1,0 +1,17 @@
+	{{range .list}}	
+	{{$CategoryName := .Id|GetCategoryNameByPostid}}
+	{{$PostImg := GetPostImgByPostId .Id  .PostContent}}
+  <article class="excerpt excerpt-1" style="">
+  <a class="focus" href="/{{.Id}}.html" title="{{.PostTitle}}" target="_blank" ><img class="thumb" data-original="{{$PostImg}}" src="{{$PostImg}}" alt="{{.PostTitle}}"  style="display: inline;"></a>
+		<header><a class="cat" href="/{{.Id}}.html" title="{{$CategoryName}}" >{{$CategoryName}}<i></i></a>
+			<h2><a href="#" title="{{.PostTitle}}" target="_blank" >{{.PostTitle}}</a>
+			</h2>
+		</header>
+		<p class="meta">
+			<time class="time"><i class="glyphicon glyphicon-time"></i> {{date .PostDate "Y-m-d"}}</time>
+			<span class="views"><i class="glyphicon glyphicon-eye-open"></i> 216</span> <a class="comment" href="##comment" title="评论" target="_blank" ><i class="glyphicon glyphicon-comment"></i> {{.CommentCount}}</a>
+		</p>
+		<p class="note">{{substr (html2str .PostContent) 0 125 }}</p>
+	</article>
+	{{end}}
+  {{str2html .pager}}
