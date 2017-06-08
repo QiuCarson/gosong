@@ -16,13 +16,14 @@ func main() {
 	//beego.AddFuncMap("GetCategoryNameByCid", models.GetCategoryNameByCid)
 	beego.AddFuncMap("GetCategoryNameByPostid", models.GetCategoryNameByPostid)
 	beego.AddFuncMap("GetPostImgByPostId", models.GetPostImgByPostId)
+	beego.AddFuncMap("GetPostViews", models.GetPostViews)
 
 	//models.GetPostViews(1)
 	//beego.SetLevel(beego.LevelError)
 	//models.GetPostImgByPostId(2775)
 	//models.GetPostImgByPostId(1)
 	//dmodels.GetPostImgByPostId(2751)
-	//models.GetMenu()
+
 	beego.ErrorController(&controllers.ErrorController{})
 	beego.SetStaticPath("/static", "static")
 	beego.Run()

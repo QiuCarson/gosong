@@ -21,13 +21,22 @@ func (m *Postmeta) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(m)
 }
 
-func GetPostViews(post_id int) *Postmeta {
+func GetPostViews(post_id int) string {
 	var (
-		info Postmeta
+		//info Postmeta
 		view *Postmeta
 	)
-	info.Query().Filter("PostId", post_id).Filter("MetaKey", "views").One(view, "Id", "PostId", "MetaKey", "MetaValue")
-	return view
+	//fmt.Println(post_id)
+	sql := "SELECT meta_value FROM so_postmeta  WHERE post_id=? AND meta_key='views'"
+	err := orm.NewOrm().Raw(sql, post_id).QueryRow(&view)
+	if err == nil {
+		return view.MetaValue
+	}
+	//info.Query().Filter("PostId", post_id).Filter("MetaKey", "views").One(&view, "MetaValue")
+	//info.Query().Filter("PostId", post_id).Filter("MetaKey", "views").One(&view)
+
+	return "0"
+	//return view
 }
 
 type Menu struct {
@@ -42,7 +51,7 @@ type Menu struct {
 func (t *Postmeta) GetPostMenu() []*Menu {
 	//var info Menu
 	var list []*Menu
-	sql := "select t.slug,t.name,p.post_title,p.post_parent,t.term_id,p.menu_order from so_postmeta pm left join so_terms t on t.term_id=pm.meta_value left join so_posts p on pm.post_id=p.ID where pm.meta_key='_menu_item_object_id' order by p.menu_order asc"
+	sql := "select t.slug,t.name,p.post_title,p.post_parent,t.term_id,p.menu_order from so_postmeta pm left join so_terms t on t.term_id=pm.meta_value left join so_posts p on pm.post_id=p.ID where pm.meta_key='_menu_item_object_id' group by t.slug order by p.menu_order asc"
 	//sql = "select * from so_posts where id=?"
 	orm.NewOrm().Raw(sql).QueryRows(&list)
 	return list

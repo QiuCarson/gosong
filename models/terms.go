@@ -1,8 +1,6 @@
 package models
 
 import (
-	"fmt"
-
 	"github.com/astaxie/beego/orm"
 )
 
@@ -36,7 +34,7 @@ func GetCategoryNameByPostid(post_id int) CategorysPost {
 
 	for _, v := range info {
 		if info != nil && v.Taxonomy == "category" {
-			fmt.Println(menu)
+
 			for _, va := range menu {
 				if va.Term_id == v.Term_id {
 					CategoryPost.Url = va.Url
