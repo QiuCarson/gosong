@@ -1,7 +1,6 @@
 package models
 
 import "github.com/astaxie/beego/orm"
-import "fmt"
 
 type OptionsInfo struct {
 	Id          int    `orm:"column(option_id);auto"`
@@ -26,7 +25,6 @@ func (t *OptionsInfo) AutolaodOption() {
 	list := make([]*OptionsInfo, 0)
 	info.Query().Filter("Autoload", "yes").All(&list)
 	for _, v := range list {
-		fmt.Println(v.OptionName)
 		OptionMap[v.OptionName] = v.OptionValue
 	}
 	//return OptionMap

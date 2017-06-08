@@ -50,6 +50,11 @@ func (this *IndexHandle) Index() {
 	this.Data["list"] = list
 
 	//推荐文章
+	var infos models.PostsInfo
+	infos.GetTop()
+	/*top := info.GetTop()
+	this.Data["top"] = top*/
+	//友情链接
 
 	pager = this.PageList(pagesize, page, count, false, "")
 	this.Data["pager"] = pager
@@ -88,10 +93,6 @@ func (this *IndexHandle) Category() {
 
 	this.Data["list"] = list
 	this.Data["categoryName"] = CategoryName
-
-	//推荐文章
-
-	//友情链接
 
 	pager = this.PageList(pagesize, page, count, false, categorystr)
 	this.Data["pager"] = pager
@@ -132,5 +133,10 @@ func (this *IndexHandle) Article() {
 
 //博客TAG页
 func (this *IndexHandle) Tags() {
+	var (
+		info models.TermsInfo
+	)
+	list := info.GetAllTags()
+	this.Data["tags"] = list
 	this.TplName = "tags.html"
 }

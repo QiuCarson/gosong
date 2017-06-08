@@ -19,6 +19,21 @@ func (m *TermsInfo) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(m)
 }
 
+type Tags struct {
+	Count string
+	Name  string
+	Slug  string
+}
+
+func (m *TermsInfo) GetAllTags() []*Tags {
+
+	var list []*Tags
+	sql := "SELECT tt.count ,t.name,t.slug FROM so_terms AS t  INNER JOIN so_term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy ='post_tag' AND tt.count > 0 ORDER BY tt.count DESC"
+	orm.NewOrm().Raw(sql).QueryRows(&list)
+	//fmt.Println(list)
+	return list
+}
+
 type CategorysPost struct {
 	Url  string
 	Name string

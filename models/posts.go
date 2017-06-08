@@ -7,6 +7,8 @@ import (
 
 	"phpsong/phpserialize"
 
+	"fmt"
+
 	"github.com/astaxie/beego/orm"
 )
 
@@ -137,6 +139,19 @@ func (m *PostsInfo) GetCategoryPosts(url string, offset, pagesize int64) (string
 	orm.NewOrm().Raw(sql1).QueryRows(&count)
 
 	return CategoryName, int64(len(count)), list
+}
+
+func (m *PostsInfo) GetTop() {
+
+	var decodeRes interface{}
+	var ok error
+	decodeRes, ok = phpserialize.Decode(OptionMap["sticky_posts"])
+
+	if ok == nil {
+		decodeData, _ := decodeRes.(map[interface{}]interface{})
+		//decodeData.Get("232").String()
+		fmt.Println(decodeData)
+	}
 }
 
 /*
