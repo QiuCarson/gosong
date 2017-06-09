@@ -25,7 +25,7 @@ func init() {
 
 	//beego.Info(dbLink)
 	//orm.RegisterModel(new(Posts))
-	orm.RegisterModelWithPrefix(DbPrefix, new(PostsInfo), new(TermsInfo), new(TermRelationshipsInfo), new(TermTaxonomy), new(Postmeta), new(OptionsInfo))
+	orm.RegisterModelWithPrefix(DbPrefix, new(PostsInfo), new(TermsInfo), new(TermRelationshipsInfo), new(TermTaxonomy), new(Postmeta), new(OptionsInfo), new(CommentsInfo))
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	orm.RegisterDataBase("default", "mysql", dbLink)
 	beego.SetLevel(beego.LevelError)

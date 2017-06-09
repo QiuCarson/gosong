@@ -51,9 +51,11 @@ func (this *IndexHandle) Index() {
 
 	//推荐文章
 	var infos models.PostsInfo
-	infos.GetTop()
-	/*top := info.GetTop()
-	this.Data["top"] = top*/
+	var tops []*models.PostsInfo
+	topstring := infos.GetTop(1)
+	infos.Query().Filter("Id__in", topstring).All(&tops)
+	this.Data["top"] = tops
+	//最新评论文章
 	//友情链接
 
 	pager = this.PageList(pagesize, page, count, false, "")

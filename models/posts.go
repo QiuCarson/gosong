@@ -2,12 +2,12 @@ package models
 
 import (
 	"regexp"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
 
 	"phpsong/phpserialize"
-
-	"fmt"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -141,17 +141,42 @@ func (m *PostsInfo) GetCategoryPosts(url string, offset, pagesize int64) (string
 	return CategoryName, int64(len(count)), list
 }
 
-func (m *PostsInfo) GetTop() {
+func (m *PostsInfo) GetTop(num int) string {
 
 	var decodeRes interface{}
 	var ok error
 	decodeRes, ok = phpserialize.Decode(OptionMap["sticky_posts"])
-
+	var keys []int
 	if ok == nil {
 		decodeData, _ := decodeRes.(map[interface{}]interface{})
+
+		//keys := make([]int64)
+
+		for _, v := range decodeData {
+			//fmt.Println(reflect.TypeOf(k.(int64)))
+			keys = append(keys, (int)(v.(int64)))
+		}
+		//fmt.Println(decodeData)
+		//fmt.Println(keys)
+		//sort.Ints(keys)
+		sort.Sort(sort.Reverse(sort.IntSlice(keys)))
+		if num > len(keys) {
+			num = len(keys)
+		}
+		var keyd []string
+		keyc := keys[0:num]
+		for _, v := range keyc {
+			//keyd[k] = strconv.Itoa(v)
+			keyd = append(keyd, strconv.Itoa(v))
+		}
+		//fmt.Println(keyd)
+		keystring := strings.Join(keyd, ",")
+		return keystring
+
 		//decodeData.Get("232").String()
-		fmt.Println(decodeData)
+		//fmt.Println(keys)
 	}
+	return ""
 }
 
 /*
