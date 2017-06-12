@@ -34,6 +34,14 @@ func (m *TermsInfo) GetAllTags() []*Tags {
 	return list
 }
 
+//获取文章tag
+func (m *TermsInfo) PostsTag(post_id int64) []*TermsInfo {
+	var terms []*TermsInfo
+	sql := " SELECT t.* FROM so_terms AS t INNER JOIN so_term_taxonomy AS tt ON tt.term_id = t.term_id INNER JOIN so_term_relationships AS tr ON tr.term_taxonomy_id = tt.term_taxonomy_id  WHERE tt.taxonomy IN ( 'post_tag') AND tr.object_id IN (?) ORDER BY t.name ASC"
+	orm.NewOrm().Raw(sql, post_id).QueryRows(&terms)
+	return terms
+}
+
 type CategorysPost struct {
 	Url  string
 	Name string

@@ -1,0 +1,10 @@
+ <div class="widget widget_sentence">
+        <h3>标签云</h3>
+        <div class="widget-sentence-content">
+            <ul class="plinks ptags">        
+                {{range .tag}}	        
+                <li><a href="/tag/{{.Slug}}" title="{{.Name}}" draggable="false">{{.Name}} <span class="badge">{{.Count}}</span></a></li>              
+                {{end}}
+            </ul>
+        </div>
+      </div>

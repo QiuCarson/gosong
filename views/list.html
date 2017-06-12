@@ -34,6 +34,16 @@
     <div class="content">
       <div class="title">
         <h3 style="line-height: 1.3">{{.categoryName}}</h3>
+        <div class="more">
+            {{range .subnav}}		
+			{{if .Active}}
+            
+            {{range $k,$v:=.Sub_menu}}
+				<a href="{{$v.Url}}" title="{{$v.Name}}">{{$v.Name}}</a>
+				{{end}}
+            {{end}}
+		{{end}}
+        </div>
       </div>
       
       {{template "_articleList.html" .}}
@@ -50,69 +60,9 @@
             </span> </div>
         </form>
       </div>
-      <div class="widget widget_sentence">
-        <h3>标签云</h3>
-        <div class="widget-sentence-content">
-            <ul class="plinks ptags">                
-                <li><a href="http://www.muzhuangnet.com/tags/list/67/" title="移动统计" draggable="false">移动统计 <span class="badge">1</span></a></li>                
-                <li><a href="http://www.muzhuangnet.com/tags/list/256/" title="404" draggable="false">404 <span class="badge">1</span></a></li>      
-                <li><a href="http://www.muzhuangnet.com/tags/list/252/" title="VS2010" draggable="false">VS2010 <span class="badge">1</span></a></li>                
-                <li><a href="http://www.muzhuangnet.com/tags/list/162/" title="杀毒软件" draggable="false">杀毒软件 <span class="badge">1</span></a></li>                
-                <li><a href="http://www.muzhuangnet.com/tags/list/133/" title="html标签" draggable="false">html标签 <span class="badge">1</span></a></li>                
-                <li><a href="http://www.muzhuangnet.com/tags/list/49/" title="循环" draggable="false">循环 <span class="badge">2</span></a></li>                
-                <li><a href="http://www.muzhuangnet.com/tags/list/22/" title="百度统计" draggable="false">百度统计 <span class="badge">2</span></a></li>                
-                <li><a href="http://www.muzhuangnet.com/tags/list/132/" title="sql" draggable="false">sql <span class="badge">6</span></a></li>                
-            </ul>
-        </div>
-      </div>
+     {{template "_tag.html" .}}
     </div>
-    <div class="widget widget_hot">
-          <h3>最新评论文章</h3>
-          <ul>
-            
-<li><a title="用DTcms做一个独立博客网站（响应式模板）" href="http://www.muzhuangnet.com/show/269.html" ><span class="thumbnail">
-    <img class="thumb" data-original="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" src="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: block;">
-</span><span class="text">用DTcms做一个独立博客网站（响应式模板）</span><span class="muted"><i class="glyphicon glyphicon-time"></i>
-    2016-11-01
-</span><span class="muted"><i class="glyphicon glyphicon-eye-open"></i>88</span></a></li>
-<li><a title="用DTcms做一个独立博客网站（响应式模板）" href="http://www.muzhuangnet.com/show/269.html" ><span class="thumbnail">
-    <img class="thumb" data-original="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" src="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: block;">
-</span><span class="text">用DTcms做一个独立博客网站（响应式模板）</span><span class="muted"><i class="glyphicon glyphicon-time"></i>
-    2016-11-01
-</span><span class="muted"><i class="glyphicon glyphicon-eye-open"></i>88</span></a></li>
-<li><a title="用DTcms做一个独立博客网站（响应式模板）" href="http://www.muzhuangnet.com/show/269.html" ><span class="thumbnail">
-    <img class="thumb" data-original="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" src="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: block;">
-</span><span class="text">用DTcms做一个独立博客网站（响应式模板）</span><span class="muted"><i class="glyphicon glyphicon-time"></i>
-    2016-11-01
-</span><span class="muted"><i class="glyphicon glyphicon-eye-open"></i>88</span></a></li>
-<li><a title="用DTcms做一个独立博客网站（响应式模板）" href="http://www.muzhuangnet.com/show/269.html" ><span class="thumbnail">
-    <img class="thumb" data-original="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" src="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: block;">
-</span><span class="text">用DTcms做一个独立博客网站（响应式模板）</span><span class="muted"><i class="glyphicon glyphicon-time"></i>
-    2016-11-01
-</span><span class="muted"><i class="glyphicon glyphicon-eye-open"></i>88</span></a></li>
-<li><a title="用DTcms做一个独立博客网站（响应式模板）" href="http://www.muzhuangnet.com/show/269.html" ><span class="thumbnail">
-    <img class="thumb" data-original="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" src="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: block;">
-</span><span class="text">用DTcms做一个独立博客网站（响应式模板）</span><span class="muted"><i class="glyphicon glyphicon-time"></i>
-    2016-11-01
-</span><span class="muted"><i class="glyphicon glyphicon-eye-open"></i>88</span></a></li>
-<li><a title="用DTcms做一个独立博客网站（响应式模板）" href="http://www.muzhuangnet.com/show/269.html" ><span class="thumbnail">
-    <img class="thumb" data-original="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" src="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: block;">
-</span><span class="text">用DTcms做一个独立博客网站（响应式模板）</span><span class="muted"><i class="glyphicon glyphicon-time"></i>
-    2016-11-01
-</span><span class="muted"><i class="glyphicon glyphicon-eye-open"></i>88</span></a></li>
-<li><a title="用DTcms做一个独立博客网站（响应式模板）" href="http://www.muzhuangnet.com/show/269.html" ><span class="thumbnail">
-    <img class="thumb" data-original="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" src="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: block;">
-</span><span class="text">用DTcms做一个独立博客网站（响应式模板）</span><span class="muted"><i class="glyphicon glyphicon-time"></i>
-    2016-11-01
-</span><span class="muted"><i class="glyphicon glyphicon-eye-open"></i>88</span></a></li>
-<li><a title="用DTcms做一个独立博客网站（响应式模板）" href="http://www.muzhuangnet.com/show/269.html" ><span class="thumbnail">
-    <img class="thumb" data-original="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" src="http://www.muzhuangnet.com/upload/201610/18/201610181739277776.jpg" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: block;">
-</span><span class="text">用DTcms做一个独立博客网站（响应式模板）</span><span class="muted"><i class="glyphicon glyphicon-time"></i>
-    2016-11-01
-</span><span class="muted"><i class="glyphicon glyphicon-eye-open"></i>88</span></a></li>
-  
-          </ul>
-      </div>
+    {{template "_NewCommentPost.html" .}}
       <div class="widget widget_sentence">
     
     <a href="http://www.muzhuangnet.com/show/269.html" target="_blank" rel="nofollow" title="MZ-NetBlog主题" >

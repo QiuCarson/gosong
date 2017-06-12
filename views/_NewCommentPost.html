@@ -1,0 +1,15 @@
+<div class="widget widget_hot">
+	  <h3>最新评论文章</h3>
+	  <ul>  
+          {{range .comments}}	 
+          {{$PostImg := GetPostImgByPostId .Id  .PostContent}}
+	    {{$Views := .Id|GetPostViews}}         
+			<li><a title="{{.PostTitle}}" href="/{{.Id}}.html" ><span class="thumbnail">
+				<img class="thumb" data-original="{{$PostImg}}" src="{{$PostImg}}" alt="{{.PostTitle}}"  style="display: block;">
+			</span><span class="text">{{.PostTitle}}</span><span class="muted"><i class="glyphicon glyphicon-time"></i>
+				{{date .PostDate "Y-m-d"}}
+			</span><span class="muted"><i class="glyphicon glyphicon-eye-open"></i>{{$Views}}</span></a></li>
+			{{end}}
+
+	  </ul>
+ </div>

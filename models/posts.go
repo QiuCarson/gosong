@@ -141,6 +141,7 @@ func (m *PostsInfo) GetCategoryPosts(url string, offset, pagesize int64) (string
 	return CategoryName, int64(len(count)), list
 }
 
+//推荐文章
 func (m *PostsInfo) GetTop(num int) string {
 
 	var decodeRes interface{}
@@ -177,6 +178,46 @@ func (m *PostsInfo) GetTop(num int) string {
 		//fmt.Println(keys)
 	}
 	return ""
+}
+
+type CommentsPost struct {
+	Id          int
+	PostTitle   string
+	PostContent string
+	PostDate    time.Time
+}
+
+//最新评论的文章
+func (this *PostsInfo) NewCommentPosts() []*CommentsPost {
+	var comment []*CommentsPost
+	sql := "select DISTINCT p.id,p.post_title,p.post_content,p.post_date from so_comments c left join so_posts p on c.comment_post_ID=p.ID where c.user_id<>1 and c.comment_approved=1 and p.post_status='publish' limit 10"
+	orm.NewOrm().Raw(sql).QueryRows(&comment)
+	return comment
+}
+
+//相关文章
+func (this *PostsInfo) RelatedPosts(id int64) []*PostsInfo {
+	var related []*PostsInfo
+	sql := "SELECT p.* FROM so_posts p INNER JOIN so_term_relationships tr ON (p.ID = tr.object_id) WHERE 1=1  AND p.ID NOT IN (?) AND ( tr.term_taxonomy_id IN (1)) AND p.post_type = 'post' AND (p.post_status = 'publish') GROUP BY p.ID ORDER BY p.post_date DESC LIMIT 0, 8"
+	orm.NewOrm().Raw(sql, id).QueryRows(&related)
+	return related
+}
+
+//tag列表
+func (this *PostsInfo) TagPosts(tag string, offset, pagesize int64) (int64, []*PostsInfo) {
+	var term TermsInfo
+	sql := "SELECT t.* FROM so_terms AS t INNER JOIN so_term_taxonomy AS tt ON t.term_id = tt.term_id WHERE t.slug = '" + tag + "' AND tt.taxonomy = 'post_tag' "
+	orm.NewOrm().Raw(sql).QueryRow(&term)
+
+	var posts []*PostsInfo
+	sql1 := "SELECT p.* FROM so_posts p  INNER JOIN so_term_relationships tr ON (p.ID = tr.object_id) WHERE 1=1  AND (  tr.term_taxonomy_id IN (?)) AND p.post_type = 'post' AND (p.post_status = 'publish') GROUP BY p.ID ORDER BY p.post_date DESC LIMIT ?, ? "
+	orm.NewOrm().Raw(sql1, term.Id, offset, pagesize).QueryRows(&posts)
+
+	var post []*PostsInfo
+	sql2 := "SELECT p.id FROM so_posts p  INNER JOIN so_term_relationships tr ON (p.ID = tr.object_id) WHERE 1=1  AND (  tr.term_taxonomy_id IN (?)) AND p.post_type = 'post' AND (p.post_status = 'publish') GROUP BY p.ID "
+	orm.NewOrm().Raw(sql2, term.Id).QueryRows(&post)
+
+	return int64(len(post)), posts
 }
 
 /*

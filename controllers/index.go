@@ -1,10 +1,10 @@
 package controllers
 
 import (
+	"math/rand"
 	"phpsong/models"
 	"strconv"
-
-	"fmt"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -50,12 +50,15 @@ func (this *IndexHandle) Index() {
 	this.Data["list"] = list
 
 	//推荐文章
-	var infos models.PostsInfo
+
 	var tops []*models.PostsInfo
-	topstring := infos.GetTop(1)
-	infos.Query().Filter("Id__in", topstring).All(&tops)
+	topstring := info.GetTop(1)
+	info.Query().Filter("Id__in", topstring).All(&tops)
 	this.Data["top"] = tops
 	//最新评论文章
+	comments := info.NewCommentPosts()
+	this.Data["comments"] = comments
+
 	//友情链接
 
 	pager = this.PageList(pagesize, page, count, false, "")
@@ -76,6 +79,7 @@ func (this *IndexHandle) Category() {
 		info         models.PostsInfo
 		pagesize     int64 = 10
 		list         []*models.PostsInfo
+		term         models.TermsInfo
 	)
 	categorystr := this.Ctx.Input.Param(":category")
 
@@ -96,6 +100,20 @@ func (this *IndexHandle) Category() {
 	this.Data["list"] = list
 	this.Data["categoryName"] = CategoryName
 
+	//最新评论文章
+	comments := info.NewCommentPosts()
+	this.Data["comments"] = comments
+
+	//随机tag
+	tag := term.GetAllTags()
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	lentag := len(tag)
+	var slice []*models.Tags
+	for i := 0; i < 8; i++ {
+		slice = append(slice, tag[r.Intn(lentag)])
+	}
+	this.Data["tag"] = slice
+
 	pager = this.PageList(pagesize, page, count, false, categorystr)
 	this.Data["pager"] = pager
 	this.TplName = "list.html"
@@ -107,9 +125,10 @@ func (this *IndexHandle) Article() {
 		info    models.PostsInfo
 		article models.PostsInfo
 		meta    models.Postmeta
+		tag     models.TermsInfo
 		id      int64
-		num     int64
-		err     error
+		//num     int64
+		err error
 	)
 	idstr := this.Ctx.Input.Param(":id")
 	id, err = strconv.ParseInt(idstr, 10, 64)
@@ -127,9 +146,22 @@ func (this *IndexHandle) Article() {
 	}
 	this.Data["article"] = article
 
+	//最新评论文章
+	comments := info.NewCommentPosts()
+	this.Data["comments"] = comments
+
 	//更新查看次数
-	num, err = meta.Query().Filter("PostId", id).Filter("MetaKey", "views").Update(orm.Params{"MetaValue": orm.ColValue(orm.ColAdd, 1)})
-	fmt.Println(num)
+	_, err = meta.Query().Filter("PostId", id).Filter("MetaKey", "views").Update(orm.Params{"MetaValue": orm.ColValue(orm.ColAdd, 1)})
+	//fmt.Println(num)
+
+	//相关推荐
+	relateds := info.RelatedPosts(id)
+	this.Data["relateds"] = relateds
+
+	//文章对应的tag
+	tags := tag.PostsTag(id)
+	this.Data["tag"] = tags
+
 	this.TplName = "article.html"
 }
 
@@ -141,4 +173,59 @@ func (this *IndexHandle) Tags() {
 	list := info.GetAllTags()
 	this.Data["tags"] = list
 	this.TplName = "tags.html"
+}
+
+//tag 列表
+func (this *IndexHandle) TagList() {
+
+	var (
+		info     models.PostsInfo
+		list     []*models.PostsInfo
+		term     models.TermsInfo
+		page     int64
+		offset   int64
+		count    int64
+		pager    string
+		pagesize int64 = 10
+	)
+	tagstr := this.Ctx.Input.Param(":tag")
+
+	pagestr := this.Ctx.Input.Param(":page")
+
+	page, _ = strconv.ParseInt(pagestr, 10, 64)
+	if page < 1 {
+		page = 1
+	}
+	offset = (page - 1) * pagesize
+	count, list = info.TagPosts(tagstr, offset, pagesize)
+
+	if len(list) < 1 {
+		this.Abort("404")
+		return
+	}
+	this.Data["list"] = list
+	this.Data["categoryName"] = tagstr
+
+	//最新评论文章
+	comments := info.NewCommentPosts()
+	this.Data["comments"] = comments
+
+	//随机tag
+	tag := term.GetAllTags()
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	lentag := len(tag)
+	var slice []*models.Tags
+	for i := 0; i < 8; i++ {
+		slice = append(slice, tag[r.Intn(lentag)])
+	}
+	this.Data["tag"] = slice
+
+	pager = this.PageList(pagesize, page, count, false, tagstr)
+	this.Data["pager"] = pager
+
+	this.TplName = "list.html"
+}
+
+func (this *IndexHandle) Bookmark() {
+	this.TplName = "bookmark.html"
 }
