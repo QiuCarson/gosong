@@ -162,6 +162,8 @@ func (this *IndexHandle) Article() {
 	tags := tag.PostsTag(id)
 	this.Data["tag"] = tags
 
+	//留言
+
 	this.TplName = "article.html"
 }
 

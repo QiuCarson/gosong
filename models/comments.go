@@ -32,3 +32,7 @@ func (t *CommentsInfo) TableName() string {
 func (m *CommentsInfo) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(m)
 }
+
+func (m *CommentsInfo) PostIdByComment() {
+
+}
