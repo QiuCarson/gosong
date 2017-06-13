@@ -126,7 +126,8 @@ func (this *IndexHandle) Article() {
 		article models.PostsInfo
 		meta    models.Postmeta
 		tag     models.TermsInfo
-		id      int64
+		//comment models.CommentsInfo
+		id int64
 		//num     int64
 		err error
 	)

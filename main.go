@@ -23,7 +23,7 @@ func main() {
 	//models.GetPostImgByPostId(2775)
 	//models.GetPostImgByPostId(1)
 	//dmodels.GetPostImgByPostId(2751)
-
+	models.PostIdByComment()
 	beego.ErrorController(&controllers.ErrorController{})
 	beego.SetStaticPath("/static", "static")
 	beego.Run()

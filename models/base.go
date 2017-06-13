@@ -31,7 +31,7 @@ func init() {
 	beego.SetLevel(beego.LevelError)
 	RunMode = Cfg.String("runmode")
 	if RunMode == "dev" || RunMode == "prod" {
-		//orm.Debug = true
+		orm.Debug = true
 	}
 	//FileLogs = logs.NewLogger(1000)
 	//FileLogs.SetLogger("file", `{"filename":”logs/test.log"}`)
